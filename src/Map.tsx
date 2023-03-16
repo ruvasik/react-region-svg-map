@@ -41,7 +41,6 @@ export function Map({
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" key={id} aria-label={name} {...other}>
-      <text>hello</text>
       {layers.map((layer) => (
         <path
           key={layer.id}
