@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  deploy:
+    name: Publish release to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start deployment
+        uses: bobheadxi/deployments@v1
+        id: deployment
+        with:
+          env: production
+          step: start
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: npm run docs:install
+
+      - name: Build docs
+        run: npm run docs:build
+
+      - name: Deploy to Netlify
+        uses: South-Paw/action-netlify-cli@v1
+        id: netlify
+        with:
+          args: deploy --json --prod --dir './docs/public' --message 'release [${{ github.sha }}]'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Finish deployment
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          env: ${{ steps.deployment.outputs.env }}
+          step: finish
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: ${{ steps.netlify.outputs.NETLIFY_PROD_URL }}
+
+  publish:
+    name: Publish package to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish package
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}

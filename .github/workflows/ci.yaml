@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - "master"
+    tags-ignore:
+      - "*.*.*"
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm run test
+        env:
+          CI: true
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Package
+        run: npm run build
+
+  deploy-draft:
+    name: Deploy draft to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start deployment
+        uses: bobheadxi/deployments@v1
+        id: deployment
+        with:
+          env: draft
+          step: start
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install docs dependencies
+        run: npm run docs:install
+
+      - name: Build docs
+        run: npm run docs:build
+
+      - name: Deploy draft to Netlify
+        uses: South-Paw/action-netlify-cli@v1
+        id: netlify
+        with:
+          args: deploy --json --dir './docs/public' --message 'draft [${{ github.sha }}]'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Finish deployment
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          env: ${{ steps.deployment.outputs.env }}
+          step: finish
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: ${{ steps.netlify.outputs.NETLIFY_DRAFT_URL }}

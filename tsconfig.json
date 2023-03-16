@@ -1,0 +1,24 @@
+{
+  "include": ["lib/react-shim.js", "src", "test", "jest.config.js", "tsup.config.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "ES2015"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6"
+  }
+}
