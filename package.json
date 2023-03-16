@@ -13,13 +13,13 @@
     "country",
     "countries"
   ],
-  "homepage": "",
-  "bugs": "",
+  "homepage": "https://github.com/ruvasik/react-region-svg-map",
+  "bugs": "https://github.com/ruvasik/react-region-svg-map/issues",
   "license": "MIT",
   "author": {
     "name": "Vladimir Alekseev",
     "email": "public@avs.guru",
-    "url": "avs.guru"
+    "url": "https://avs.guru/"
   },
   "files": [
     "dist"
@@ -28,7 +28,7 @@
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:ruvasik/react-region-svg-map.git"
   },
   "scripts": {
     "clean": "rimraf dist coverage",
