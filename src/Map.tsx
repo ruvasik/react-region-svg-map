@@ -1,15 +1,16 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import type { MapLayer, MapProps } from './Map.d';
 
-const convert = (lat: number, lng: number, box) => {
-  console.log('convert', box);
+import cx from '../maps/cx.json';
+
+const convert = (lat: number, lng: number, box, k = 1) => {
   const [w, h] = box;
-  const x = (lng + 180) * (w / 360);
+  const x = (lng + 180) * (w / 360) * k;
 
   const latRad = (lat * Math.PI) / 180;
 
   const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-  const y = h / 2 - (w * mercN) / (2 * Math.PI);
+  const y = h / 2 - (w * mercN) / (2 * Math.PI) * k;
 
   return { x, y };
 };
@@ -45,7 +46,7 @@ function NMap(
   }, [ref]);
 
   useEffect(() => {
-    fRef.current = { latLntToMap: (x, y) => convert(x, y, box) };
+    fRef.current = { latLntToMap: (x, y) => convert(x, y, box, 1) };
   }, [convert, box, fRef]);
 
   const layers: MapLayer[] = [];
