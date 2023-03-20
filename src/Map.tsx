@@ -7,7 +7,7 @@ const convert = (lat: number, lng: number, box, k = 1) => {
   const [w, h] = box;
 
   const kx = Array.isArray(k) ? k[0] : k;
-  const ky = Array.isArray(k) ? k[1] : k;
+  const ky = Array.isArray(k) ? 1 / k[1] : 1 / k;
 
   const x = (lng + 180) * (kx * w / 360);
 
