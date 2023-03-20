@@ -46,7 +46,7 @@ function NMap(
   }, [ref]);
 
   useEffect(() => {
-    fRef.current = { latLntToMap: (x, y) => convert(x, y, box, 1) };
+    fRef.current = { latLntToMap: (x, y, k = 1) => convert(x, y, box, k) };
   }, [convert, box, fRef]);
 
   const layers: MapLayer[] = [];
