@@ -1,4 +1,4 @@
-import React, {forwardRef, useRef} from 'react';
+import React, {forwardRef, Ref, useRef} from 'react';
 import type { MapLayer, MapProps } from './Map.d';
 
 // import cx from '../maps/cx.json';
@@ -13,7 +13,7 @@ function Map({
   currentLayers,
   children,
   ...other
-}: MapProps, ref) {
+}: MapProps, ref: Ref<SVGSVGElement>) {
   // if (!layers || layers.length === 0) {
   //   // eslint-disable-next-line no-console
   //   console.error(
