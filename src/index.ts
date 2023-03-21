@@ -1,3 +1,5 @@
-export * from './Map';
+import Map from './Map';
+import { getLatLngToMap } from './utils';
 
-// export default Map;
+export { getLatLngToMap, Map };
+export default Map;

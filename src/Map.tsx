@@ -1,28 +1,19 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import React, {forwardRef, useRef} from 'react';
 import type { MapLayer, MapProps } from './Map.d';
 
-import cx from '../maps/cx.json';
+// import cx from '../maps/cx.json';
 
-const convert = (lat: number, lng: number, box, k = 1) => {
-  const [w, h] = box;
-
-  const kx = Array.isArray(k) ? k[0] : k;
-  const ky = Array.isArray(k) ? 1 / k[1] : 1 / k;
-
-  const x = (lng + 180) * (kx * w / 360);
-
-  const latRad = (lat * Math.PI) / 180;
-
-  const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-  const y = ky * h / 2 - (kx * w * mercN) / (2 * Math.PI);
-
-  return { x, y };
-};
-
-function NMap(
-  { id, name, tabIndex = 0, layerProps, checkedLayers, regions = [], currentLayers, children, ...other }: MapProps,
-  fRef,
-) {
+function Map({
+  id,
+  name,
+  tabIndex = 0,
+  layerProps,
+  checkedLayers,
+  regions = [],
+  currentLayers,
+  children,
+  ...other
+}: MapProps, ref) {
   // if (!layers || layers.length === 0) {
   //   // eslint-disable-next-line no-console
   //   console.error(
@@ -30,28 +21,6 @@ function NMap(
   //   );
   //   return null;
   // }
-
-  const ref = useRef<SVGSVGElement>(null);
-  const [box, setBox] = useState([undefined, undefined]);
-
-  useEffect(() => {
-    if (ref.current) {
-      const bBox = ref.current.getBBox();
-      setBox([bBox.width, bBox.height]);
-      //
-      // console.log('ref', ref.current.viewBox);
-      //
-      // for (const child of ref.current.children) {
-      //   // console.log(child.getBBox().width / bBox.width);
-      //   // x[child.id] = child.getBBox().width / bBox.width;
-      //   console.log(child.id, cx[child.id], '!');
-      // }
-    }
-  }, [ref]);
-
-  useEffect(() => {
-    fRef.current = { latLntToMap: (x, y, k = 1) => convert(x, y, box, k) };
-  }, [convert, box, fRef]);
 
   const layers: MapLayer[] = [];
 
@@ -91,21 +60,5 @@ function NMap(
   );
 }
 
-const returnDefault = () => ({ x: undefined, y: undefined });
-
-export const useMapFunction = (ref) => {
-  const [force, setForce] = useState(1);
-
-  useEffect(() => {
-    setForce(Math.random());
-  }, [ref?.current?.latLntToMap]);
-
-  if (!ref?.current?.latLntToMap)
-    return returnDefault;
-
-  return ref.current.latLntToMap;
-};
-
 // eslint-disable-next-line import/prefer-default-export
-export const Map = forwardRef(NMap);
-// export const Map = NMap;
+export default forwardRef(Map);
