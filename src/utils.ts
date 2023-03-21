@@ -1,4 +1,4 @@
-import { Ref } from 'react';
+import { RefObject } from 'react';
 
 type TConvert = (
   lat: number,
@@ -30,7 +30,7 @@ const convert: TConvert = (lat, lng, w_, h_, k = 1) => {
 const returnDefault = () => ({ x: undefined, y: undefined });
 
 // eslint-disable-next-line import/prefer-default-export
-export const getLatLngToMap = (ref: Ref<SVGSVGElement>, k?: number | [number, number] = 1) => {
+export const getLatLngToMap = (ref: RefObject<SVGSVGElement>, k: number | [number, number] = 1) => {
   const bBox = ref?.current?.getBBox();
 
   if (!ref?.current || !bBox) return returnDefault;

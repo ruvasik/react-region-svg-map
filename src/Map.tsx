@@ -1,19 +1,12 @@
-import React, {forwardRef, Ref, useRef} from 'react';
+import React, { forwardRef, RefObject } from 'react';
 import type { MapLayer, MapProps } from './Map.d';
 
 // import cx from '../maps/cx.json';
 
-function Map({
-  id,
-  name,
-  tabIndex = 0,
-  layerProps,
-  checkedLayers,
-  regions = [],
-  currentLayers,
-  children,
-  ...other
-}: MapProps, ref: Ref<SVGSVGElement>) {
+function MapFC(
+  { id, name, tabIndex = 0, layerProps, checkedLayers, regions = [], currentLayers, children, ...other }: MapProps,
+  ref: RefObject<SVGSVGElement>,
+) {
   // if (!layers || layers.length === 0) {
   //   // eslint-disable-next-line no-console
   //   console.error(
@@ -39,6 +32,7 @@ function Map({
     typeof regions !== 'function' ? require(`../maps/json/russia.json`) : require(`../maps/json/world-low-res.json`);
 
   layers.splice(0, 0, ...r.layers);
+  // eslint-disable-next-line no-param-reassign
   other.viewBox = r.viewBox;
 
   return (
@@ -60,5 +54,7 @@ function Map({
   );
 }
 
+export const Map = React.memo(forwardRef(MapFC));
+
 // eslint-disable-next-line import/prefer-default-export
-export default React.memo(forwardRef(Map));
+export default Map;
