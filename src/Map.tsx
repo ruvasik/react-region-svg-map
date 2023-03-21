@@ -61,4 +61,4 @@ function Map({
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export default forwardRef(Map);
+export default React.memo(forwardRef(Map));

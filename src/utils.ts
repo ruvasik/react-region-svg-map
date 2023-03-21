@@ -1,7 +1,5 @@
 const convert = (lat: number, lng: number, w, h, k = 1) => {
-  console.log('convert', lat, lng, w,h);
-
-  if (!lat || !lng || w || h) return { x: undefined, y: undefined };
+  if (!lat || !lng || !w || !h) return { x: undefined, y: undefined };
 
   const kx = Array.isArray(k) ? k[0] : k;
   const ky = Array.isArray(k) ? 1 / k[1] : 1 / k;
